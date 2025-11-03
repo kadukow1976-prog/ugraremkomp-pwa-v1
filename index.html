@@ -1,261 +1,395 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mini CRM Mobile — Clients & Resources</title>
-<meta name="theme-color" content="#0d1117">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icons/icon-192.png" sizes="192x192">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-<style>
-:root{--bg:#0d1117;--panel:#111827;--soft:#0f1623;--border:#1f2a37;--text:#e6edf3;--dim:#8b98a5;--accent:#19c37d;--warn:#ffb454;--bad:#ef5350;--ok:#2ecc71;--radius:14px}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
-.container{max-width:880px;margin:0 auto;padding:12px}
-.header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg) 75%,rgba(13,17,23,0));padding:8px 12px}
-.tabs{display:flex;gap:8px;margin-bottom:8px}
-.tab{flex:0 0 auto;padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:var(--soft);color:var(--text);cursor:pointer;font-size:14px}
-.tab.active{border-color:rgba(25,195,125,.5);box-shadow:0 0 0 2px rgba(25,195,125,.2) inset}
-.search{display:flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
-.search input{flex:1;background:transparent;border:0;outline:none;color:var(--text);font-size:17px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid #2b3b52;background:#162032;color:#d6deea;font-size:13px;cursor:pointer}.btn.sm{padding:6px 8px;font-size:12px}
-.btn.ghost{background:transparent}
-.list{display:grid;gap:6px;margin-top:10px}
-.card{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--panel)}
-.card .name{font-weight:600;color:#aee0c6;font-size:14px;line-height:1.2}
-.card .meta{font-size:11px;color:var(--dim)}
-.badge{font-size:11px;border-radius:8px;padding:1px 6px;border:1px solid var(--border);opacity:.95}
-.badge.warn{background:rgba(239,83,80,.08);border-color:rgba(239,83,80,.35);color:#ffb0a8}
-.badge.ok{background:rgba(46,204,113,.08);border-color:rgba(46,204,113,.35);color:#b6f1c9}
-.empty{color:var(--dim);padding:24px;text-align:center}
-.small{font-size:12px;color:var(--dim)}
-.install-tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);background:#1b2433;border:1px solid #2b3b52;border-radius:10px;color:#d6deea;padding:8px 12px;font-size:13px;display:none;z-index:50}
-/* modal */
-.sheet{position:fixed;inset:0;display:none}
-.sheet.show{display:block}
-.sheet .backdrop{position:absolute;inset:0;background:rgba(5,8,12,.55);backdrop-filter:blur(6px)}
-.sheet .panel{position:absolute;left:0;right:0;bottom:0;background:var(--panel);border-top-left-radius:16px;border-top-right-radius:16px;border:1px solid var(--border);padding:14px 12px 18px;max-height:90vh;overflow:auto}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.row .full{grid-column:1 / -1}
-.input{display:flex;flex-direction:column;gap:6px}
-.input label{font-size:12px;color:var(--dim)}
-.input input,.input textarea{background:var(--soft);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:10px 12px;outline:none}
-.kpis{display:flex;gap:8px;margin:6px 0 8px}
-.pill{padding:6px 10px;border-radius:10px;border:1px solid var(--border);font-size:12px}
-.pill.bad{background:rgba(239,83,80,.08);color:#ffb0a8;border-color:rgba(239,83,80,.35)}
-.pill.ok{background:rgba(46,204,113,.08);color:#b6f1c9;border-color:rgba(46,204,113,.35)}
-.actions{display:flex;gap:10px;margin-top:10px}
-.actions .btn{flex:1;justify-content:center}
-.link{display:block;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--panel);color:var(--text);text-decoration:none;transition:box-shadow .15s ease,border-color .15s ease}
-.link:hover{border-color:rgba(25,195,125,.35);box-shadow:0 0 0 2px rgba(25,195,125,.18) inset}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MiniCRM v2 — FINAL (SaaS + Панель + Offline)</title>
+  <meta name="theme-color" content="#0b0f14" />
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root{ --bg:#0b0f14; --panel:#101621; --soft:#0e141d; --glass:rgba(255,255,255,.05);
+           --border:#1b2533; --text:#e7eef7; --muted:#9aa7bb; --accent:#19c37d; --warn:#ffb020; --danger:#ff5d5d;
+           --radius:16px; --shadow:0 8px 28px rgba(0,0,0,.4); }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#0a0e13 60%,#090d12);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto}
+    .header{position:sticky;top:0;z-index:20;display:flex;gap:6px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(11,15,20,.95),rgba(11,15,20,.72))}
+    .brand{display:flex;align-items:center;gap:10px}
+    .dot{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#42ffb7,var(--accent));box-shadow:0 0 16px var(--accent)}
+    h1{display:none}
+    .search{display:flex;gap:8px;align-items:center;margin-left:auto}
+    .search input{flex:1;min-width:120px;background:var(--soft);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:6px}
+    .badge, .iconbtn{white-space:nowrap;border:1px dashed var(--border);padding:4px 6px;border-radius:10px;color:var(--muted);cursor:pointer;background:var(--glass)}
+
+    .tabs{display:flex;gap:8px;overflow:auto;padding:8px 12px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(13,18,26,.9),rgba(13,18,26,.6))}
+    .tab{flex:0 0 auto;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--glass);color:var(--muted)}
+    .tab.active{color:var(--text);border-color:rgba(25,195,125,.35);background:linear-gradient(180deg,rgba(25,195,125,.14),rgba(25,195,125,.08));box-shadow:0 4px 18px rgba(25,195,125,.16)}
+
+    .page{display:none;min-height:calc(100dvh - 150px);padding:8px}
+    .page.active{display:block;animation:fade .18s}
+    @keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+    .card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px;margin:8px 0}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .title{font-weight:700}
+    .muted{color:var(--muted)}
+    .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+    .chip{font-size:11px;padding:4px 6px;border-radius:999px;border:1px solid var(--border);background:var(--glass);color:var(--muted)}
+    .chip.ok{color:#b8f7d9;border-color:rgba(25,195,125,.4)}
+    .chip.bad{color:#ffb8b8;border-color:rgba(255,93,93,.4)}
+    .card::after{content:"";position:absolute;inset:2px;border-radius:calc(var(--radius) - 2px);pointer-events:none;opacity:.75}
+    /* тонкая красная светящая окантовка для должников */
+    .card.debtor{border-color:rgba(255,32,32,.45)}
+    .card.debtor::after{box-shadow:0 0 0 0.5px rgba(255,32,32,.7)}
+    @media (min-resolution: 2dppx){ .card.debtor::after{box-shadow:0 0 0 0.25px rgba(255,32,32,.6)} }
+    @media (min-resolution: 3dppx){ .card.debtor::after{box-shadow:0 0 0 0.167px rgba(255,32,32,.55)} }
+    /* затемнение завершённых */
+    .card.done::before{content:"";position:absolute;inset:2px;border-radius:calc(var(--radius) - 2px);background:rgba(0,0,0,.38);pointer-events:none}
+
+    .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+    .kpi{background:linear-gradient(180deg,rgba(25,195,125,.12),rgba(25,195,125,.04));border:1px solid rgba(25,195,125,.35);border-radius:12px;padding:8px}
+    .kpi h3{margin:0 0 4px 0;font-size:12px;color:var(--muted)}
+    .kpi b{font-size:15px}
+
+    .navbar{position:sticky;bottom:0;z-index:18;border-top:1px solid var(--border);padding:8px;background:linear-gradient(0deg,rgba(9,12,16,.95),rgba(9,12,16,.75))}
+    .navrow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .navbtn{padding:8px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:var(--muted)}
+    .navbtn.active{color:var(--text);border-color:rgba(25,195,125,.35);box-shadow:0 4px 18px rgba(25,195,125,.15)}
+
+    .toast{position:fixed;left:50%;bottom:72px;transform:translateX(-50%);background:#111;color:#fff;border:1px solid #333;padding:8px 10px;border-radius:10px;opacity:0;transition:.2s;pointer-events:none}
+    .toast.show{opacity:1}
+
+    .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+    .field{display:grid;gap:4px;margin-top:6px}
+    .field input,.field textarea,.field select,.field button{padding:8px;border-radius:12px;border:1px solid var(--border);background:var(--soft);color:var(--text);width:100%}
+    .field input,.field select,.field button{height:42px}
+    .field textarea{min-height:72px;resize:vertical}
+
+    .subtabs{display:flex;gap:8px;margin:6px 0}
+    .subtabs .sub{padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--glass);color:var(--muted)}
+    .subtabs .sub.active{color:var(--text);border-color:rgba(25,195,125,.35)}
+
+    .blocker{position:fixed;inset:0;background:rgba(11,15,20,.88);display:none;align-items:center;justify-content:center;z-index:50}
+    .modal{max-width:520px;margin:12px;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:14px}
+
+    @media (max-width: 420px){
+      .grid2{grid-template-columns:1fr}
+      .modal{margin:8px;padding:12px}
+      .header{padding:6px 8px}
+      .tabs{padding:6px 8px}
+      .navbar{padding:6px}
+    }
+
+    .phone{color:#b8f7d9;text-decoration:none}
+    .editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    body.modal-open .navbar{display:none}
+  </style>
 </head>
 <body>
-  <header class="header container">
-    <div class="tabs">
-      <button id="tab-clients" class="tab active" type="button">Клиенты</button>
-      <button id="tab-res" class="tab" type="button">Ресурсы</button>
-      <button id="btn-demo" class="btn ghost" type="button" title="Добавить демо">＋ Демо</button>
-    </div>
-    <div class="search" role="search">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-3.5-3.5" stroke="#8b98a5" stroke-width="1.8" stroke-linecap="round"></path><circle cx="11" cy="11" r="7" stroke="#8b98a5" stroke-width="1.8"></circle></svg>
-      <input id="q" placeholder="Поиск: имя, телефон, ID" autocomplete="off">
-    </div>
-  </header>
-
-  <main class="container">
-    <!-- Clients list -->
-    <section id="view-clients">
-      <div id="clients" class="list"></div>
-      <div id="empty-clients" class="empty">Совпадений нет.</div>
-      <div class="small">Хранилище: <code>localStorage[\"mini_crm_clients_v1\"]</code> · <button id="to-storage" class="btn sm ghost" type="button">Перейти в хранилище</button></div>
-    </section>
-
-    <!-- Resources list -->
-    <section id="view-res" style="display:none">
-      <div id="res-list" class="list"></div>
-      <div id="res-empty" class="empty">Ссылок нет или ничего не найдено</div>
-      <div class="small">Хранилище: <code>localStorage[\"mini_crm_resources_v1\"]</code></div>
-    </section>
-  </main>
-
-  <!-- Client sheet -->
-  <div id="sheet" class="sheet" aria-hidden="true">
-    <div class="backdrop" data-close></div>
-    <div class="panel">
-      <div class="row">
-        <div class="input"><label>Имя</label><input id="f-name"></div>
-        <div class="input"><label>Телефон</label><input id="f-phone" inputmode="tel"></div>
-        <div class="input"><label>Дата</label><input id="f-date" type="date"></div>
-        <div class="input"><label>Детали ₽</label><input id="f-parts" type="number" step="1" min="0"></div>
-        <div class="input"><label>Работы ₽</label><input id="f-labor" type="number" step="1" min="0"></div>
-        <div class="input"><label>Наценка ₽</label><input id="f-markup" type="number" step="1" min="0"></div>
-        <div class="input"><label>Оплачено ₽</label><input id="f-paid" type="number" step="1" min="0"></div>
-        <div class="input full"><label>Заметка мастера</label><textarea id="f-note" rows="3"></textarea></div>
-      </div>
-      <div class="kpis">
-        <div id="pill-total" class="pill">Итог: 0 ₽</div>
-        <div id="pill-debt" class="pill">Долг: 0 ₽</div>
-      </div>
-      <div class="actions">
-        <button id="save" class="btn" type="button">Сохранить</button>
-        <button id="del" class="btn ghost" type="button">Удалить</button>
-        <a id="call" class="btn ghost" href="#">Позвонить</a>
-      </div>
+  <div class="header">
+    <div class="brand"><div class="dot"></div></div>
+    <div class="search">
+      <input id="q" placeholder="Поиск: имя/телефон/модель, #ID" autocomplete="off" />
+      <button class="iconbtn" id="add-new" title="Новый клиент">＋ Новый</button>
+      <div class="badge" id="stat" title="Лицензия / Оплата">Лицензия</div>
     </div>
   </div>
 
-  <div id="install-tip" class="install-tip">Добавьте на экран: меню браузера → «Установить приложение»</div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-page="home">Главная</button>
+    <button class="tab" data-page="debts">Просрочка</button>
+    <button class="tab" data-page="work">В работе</button>
+    <button class="tab" data-page="done">Завершённые</button>
+    <button class="tab" data-page="admin">Панель</button>
+  </div>
 
-<script>(function(){'use strict';
-function $(s,r){return (r||document).querySelector(s)};function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
-var CKEY='mini_crm_clients_v1';
-var RKEY='mini_crm_resources_v1';
-var DEBOUNCE_MS=200; var state={rows:[], view:'clients', cur:null};
-function fmt(n){n=+n||0;return n.toLocaleString('ru-RU')} 
-function normPhone(p){return String(p||'').replace(/[^0-9+]/g,'')}
-function nowISO(){return new Date().toISOString()}
-function loadK(k){try{var v=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}}
-function saveK(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function debtOf(c){var t=(+c.parts||0)+(+c.labor||0)+(+c.markup||0);return t-(+c.paid||0)}
+  <section class="page active" id="page-home">
+    <div class="kpis" id="home-kpis"></div>
+    <div id="home-list"></div>
+  </section>
+  <section class="page" id="page-debts">
+    <div id="debts-summary"></div>
+    <div id="debts-list"></div>
+  </section>
+  <section class="page" id="page-work"><div id="work-list"></div></section>
+  <section class="page" id="page-done"><div id="done-list"></div></section>
 
-/* RESOURCES helpers (reused) */
-function labelFrom(u){
-  try{
-    if(/^intent:/i.test(u)) return 'Открыть в приложении';
-    if(/^tel:/i.test(u))     return 'Позвонить';
-    if(/^sms:/i.test(u))     return 'SMS';
-    if(/^mailto:/i.test(u))  return u.replace(/^mailto:/i,'');
-    var h=new URL(u).hostname.replace(/^www\./,'');
-    var p=h.split('.');
-    return (p.length>2?p[p.length-2]:p[0])||h;
-  }catch(e){
-    return String(u).replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'');
+  <section class="page" id="page-admin">
+    <div class="card">
+      <div class="title">Панель управления</div>
+      <div class="muted" id="tenant-info">Экземпляр: —</div>
+      <div class="subtabs" id="subtabs">
+        <button class="sub active" data-sub="settings">Настройки</button>
+        <button class="sub" data-sub="builder">Конструктор страниц</button>
+        <button class="sub" data-sub="publish">Публикация</button>
+      </div>
+      <div id="sub-settings">
+        <div class="grid2">
+          <div class="field"><label>Название компании</label><input id="cfg-name" placeholder="ООО УграРемКомп" /></div>
+          <div class="field"><label>Контактный телефон</label><input id="cfg-phone" placeholder="+7 900 000-00-00" /></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Пароль администратора</label><input id="cfg-pass" type="password" placeholder="demo" /></div>
+          <div class="field"><label>Срок лицензии (дней, демо)</label><input id="cfg-licdays" type="number" value="30" /></div>
+        </div>
+        <div class="grid2" style="margin-top:8px">
+          <button id="cfg-save">Сохранить</button>
+          <button id="cfg-reset" style="border-color:#333">Сбросить демо-данные</button>
+        </div>
+      </div>
+      <div id="sub-builder" style="display:none">
+        <div class="field"><label>HTML‑шаблон страницы</label>
+          <textarea id="bld-html" rows="8" placeholder="<section>Новая страница</section>"></textarea>
+        </div>
+        <div class="grid2" style="margin-top:8px">
+          <button id="bld-preview">Предпросмотр</button>
+          <button id="bld-download">Скачать как HTML</button>
+        </div>
+        <iframe id="bld-frame" style="width:100%;height:240px;border:1px solid var(--border);border-radius:12px;margin-top:8px"></iframe>
+      </div>
+      <div id="sub-publish" style="display:none">
+        <div class="field"><label>Экспорт данных</label>
+          <div class="grid2">
+            <button id="exp-json">Скачать JSON базы</button>
+            <button id="exp-static">Скачать текущую страницу</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="title">Как опубликовать</div>
+          <ol class="muted">
+            <li>GitHub → New repository → включите Pages.</li>
+            <li>Загрузите <b>index.html</b> (или файл из конструктора).</li>
+            <li>Откройте URL Pages c параметром <code>?tid=ВАШ_КОД</code> — изоляция арендатора.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="navbar" id="navbar">
+    <div class="navrow">
+      <button class="navbtn active" data-page="home">Главная</button>
+      <button class="navbtn" data-page="debts">Просрочка</button>
+      <button class="navbtn" data-page="work">В работе</button>
+      <button class="navbtn" data-page="done">Завершённые</button>
+      <button class="navbtn" data-page="admin">Панель</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Готово</div>
+
+  <!-- Лицензионный/парольный гейт -->
+  <div class="blocker" id="gate">
+    <div class="modal">
+      <div class="title">Доступ к экземпляру</div>
+      <div class="muted" id="gate-info">Экземпляр: —</div>
+      <div class="field"><label>Пароль</label><input id="gate-pass" type="password" placeholder="введите пароль"></div>
+      <div class="grid2" style="margin-top:8px">
+        <button id="gate-enter">Войти</button>
+        <button id="gate-trial">Пробный 7 дней</button>
+      </div>
+      <div class="muted" id="gate-msg" style="margin-top:6px">—</div>
+    </div>
+  </div>
+
+  <!-- Редактор клиента (новый/правка) -->
+  <div class="blocker" id="editor-layer" style="display:none">
+    <div class="modal">
+      <div class="title" id="ed-title">Новый клиент</div>
+      <form id="ed-form">
+        <input type="hidden" id="ed-id" />
+        <div class="grid2">
+          <div class="field"><label>Имя клиента</label><input id="ed-name" required placeholder="Иван Иванов" /></div>
+          <div class="field"><label>Телефон</label><input id="ed-phone" placeholder="+7 900 000-00-00" inputmode="tel" /></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Модель аппарата</label><input id="ed-device" placeholder="iPhone 11 / Redmi ..." /></div>
+          <div class="field"><label>Срок оплаты</label><input id="ed-due" type="date" /></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Работа ₽</label><input id="ed-labor" type="number" value="0" inputmode="numeric" /></div>
+          <div class="field"><label>Детали (себестоимость) ₽</label><input id="ed-parts" type="number" value="0" inputmode="numeric" /></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Оплачено ₽</label><input id="ed-paid" type="number" value="0" inputmode="numeric" /></div>
+          <div class="field"><label>Статус</label>
+            <select id="ed-status"><option value="work">В работе</option><option value="done">Завершён</option></select>
+          </div>
+        </div>
+        <div class="field"><label>Заметка мастера</label><textarea id="ed-notes" rows="3" placeholder="Короткая заметка"></textarea></div>
+        <div class="editor-actions" style="margin-top:8px">
+          <button type="button" id="ed-cancel">Отмена</button>
+          <button type="submit" id="ed-save">Сохранить</button>
+        </div>
+        <div class="editor-actions" style="margin-top:8px">
+          <button type="button" id="ed-done">Отметить завершённым</button>
+          <button type="button" id="ed-delete" style="border-color:#8b2b2b;color:#ffb8b8">Удалить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+(function(){
+  // ===== утилиты
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const byId=(id)=>document.getElementById(id);
+  const fmt=(n)=> new Intl.NumberFormat('ru-RU').format(Math.round(Number(n||0)));
+  const money=(n)=> fmt(n)+" ₽";
+  const days=(ms)=> Math.ceil(ms/86400000);
+  const TID=((new URLSearchParams(location.search).get('tid'))||'default').toLowerCase().replace(/[^a-z0-9_-]/g,'');
+  const ns=(k)=>`mcrm.v2.${TID}.${k}`;
+  const nowId=()=>"#"+Math.floor(100000+Math.random()*899999);
+
+  // ===== ключи хранилища (изоляция по TID)
+  const KEYS={ data:ns('data'), cfg:ns('cfg'), lic:ns('lic'), users:ns('users'), sess:ns('sess') };
+  const DB={ get(){ try{return JSON.parse(localStorage.getItem(KEYS.data))||[]}catch(e){return[]} }, set(v){ localStorage.setItem(KEYS.data, JSON.stringify(v||[])); } };
+  const CFG={ get(){ try{return JSON.parse(localStorage.getItem(KEYS.cfg))||{} }catch(e){return{}} }, set(v){ localStorage.setItem(KEYS.cfg, JSON.stringify(v||{})); } };
+  const LIC={ get(){ try{return JSON.parse(localStorage.getItem(KEYS.lic))||{trialStart:null,validUntil:null} }catch(e){return{trialStart:null,validUntil:null}} }, set(v){ localStorage.setItem(KEYS.lic, JSON.stringify(v||{})); } };
+  const AUTH={ getUsers(){ try{return JSON.parse(localStorage.getItem(KEYS.users))||[]}catch(e){return[]} }, setUsers(a){ localStorage.setItem(KEYS.users, JSON.stringify(a||[])); }, getSess(){ try{return JSON.parse(sessionStorage.getItem(KEYS.sess))||null}catch(e){return null} }, setSess(v){ sessionStorage.setItem(KEYS.sess, JSON.stringify(v||null)); } };
+
+  // ===== доменные функции
+  function compute(it){ const labor=+it.labor||0, parts=+it.parts||0, paid=+it.paid||0; const total=labor+parts; const debt=Math.max(0,total-paid); const dueAt= it.dueAt?+it.dueAt : (it.createdAt?+it.createdAt+3*86400000: Date.now()); const overdueDays=(debt>0 && Date.now()>dueAt)? days(Date.now()-dueAt):0; return {total,debt,dueAt,overdueDays}; }
+  function matchQuery(it,q){ if(!q) return true; const src=[it.name,it.phone,it.device,it.id].join(' ').toLowerCase().replace(/[\s\-()]/g,''); const qq=String(q).toLowerCase().replace(/[\s\-()]/g,''); return src.includes(qq)||src.startsWith(qq); }
+  function aggregate(list){ let totalDebt=0,totalPaid=0,totalSum=0,inWork=0,done=0,debtors=0; list.forEach(x=>{ const m=compute(x); totalDebt+=m.debt; totalPaid+=+x.paid||0; totalSum+=m.total; inWork+= x.status==='work'?1:0; done+= x.status==='done'?1:0; if(m.debt>0) debtors++; }); return {totalDebt,totalPaid,totalSum,inWork,done,debtors,count:list.length}; }
+
+  // ===== UI helpers
+  function toast(msg){ const t=byId('toast'); if(!t) return; t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1400); }
+  function card(it){ const m=compute(it); const tel=(it.phone||'').replace(/[^\d+]/g,''); const isDone = (it.status==='done' && m.debt===0);
+    const cls = [ (m.debt>0?'debtor':''), (isDone?'done':'work') ].filter(Boolean).join(' ');
+    const statusLabel = isDone ? 'Завершён' : 'В работе';
+    const overdue = m.debt>0? (`Просрочка: ${m.overdueDays} дн.`) : 'Без долга';
+    return `<div class="card ${cls}" data-id="${it.id}">
+      <div class="row"><div class="title">${it.name} <span class="muted">${it.id}</span></div><span class="chip">${it.device||''}</span></div>
+      <div class="row"><a class="phone" href="tel:${tel}">${it.phone||''}</a><span class="chip ${m.debt>0?'bad':'ok'}">${overdue}</span><span class="chip">${statusLabel}</span></div>
+      <div class="chips"><span class="chip">Работа: ${money(it.labor)}</span><span class="chip">Детали: ${money(it.parts)}</span><span class="chip">Оплачено: ${money(it.paid)}</span><span class="chip">Долг: ${money(m.debt)}</span><span class="chip">Итого: ${money(m.total)}</span></div>
+    </div>`; }
+
+  function renderList(where, list){ byId(where).innerHTML = list.map(card).join('') || '<div class="muted">Нет данных</div>'; }
+  function kpi(name,val){ return `<div class="kpi"><h3>${name}</h3><b>${val}</b></div>` }
+
+  function licState(){ const lic=LIC.get(); const now=Date.now(); let status='ok', msg='Активна'; if(!lic.validUntil){ status='trial'; msg='Демо-режим'; } else if(now>+lic.validUntil){ status='blocked'; msg='Истекла'; } return {status,msg,until:+(lic.validUntil||0)} }
+  function ensureTrial(){ const l=LIC.get(); if(!l.trialStart){ l.trialStart=Date.now(); l.validUntil=Date.now()+7*86400000; LIC.set(l);} }
+  function gateShow(msg){ byId('gate-msg').textContent=msg||'—'; byId('gate').style.display='flex'; document.body.classList.add('modal-open'); byId('gate-info').textContent=`Экземпляр: ${TID}`; }
+  async function gateCheck(){ const pass=byId('gate-pass').value.trim(); if(!pass){ byId('gate-msg').textContent='Введите пароль'; return; } const users=AUTH.getUsers(); let ok=false; if(!users.length){ const hash=await sha256('demo'); AUTH.setUsers([{id:'u1',name:'admin',role:'admin',pinHash:hash}]); ok=(await sha256(pass))===hash; } else { ok=(await sha256(pass))===users[0].pinHash; }
+    if(ok){ AUTH.setSess({ok:true,tid:TID}); byId('gate').style.display='none'; document.body.classList.remove('modal-open'); toast('Вход выполнен'); renderAll(); } else { byId('gate-msg').textContent='Неверный пароль'; }
   }
-}
+  function ensureAccess(){ const ls=licState(); const sess=AUTH.getSess(); if(ls.status==='blocked'){ gateShow('Лицензия не активна. Нажмите «Пробный 7 дней» или купите доступ.'); return false; } if(!sess||!sess.ok){ gateShow('Введите пароль для входа в экземпляр'); return false; } return true; }
 
-function render(){
-  var q=($('#q')?$('#q').value:'').toLowerCase();
-  if(state.view==='clients'){
-    var all=loadK(CKEY); state.rows=all.filter(function(c){
-      var phone=(c.phone||'').toLowerCase(), name=(c.name||'').toLowerCase(), id=(c.id||'').toLowerCase();
-      return !q || phone.indexOf(q)>-1 || name.indexOf(q)>-1 || id.indexOf(q)>-1;
-    });
-    var list=$('#clients'); var empty=$('#empty-clients'); if(list) list.innerHTML='';
-    if(!state.rows.length){ if(empty) empty.style.display='block'; return } else if(empty) empty.style.display='none';
-    state.rows.forEach(function(c,i){
-      var d=debtOf(c);
-      var el=document.createElement('div'); el.className='card';
-      el.innerHTML='<div><div class="name">'+(c.name||'Без имени')+'</div>'+
-                   '<div class="meta">'+(c.phone||'')+' • '+(c.date||'—')+'</div></div>'+
-                   '<div><span class="badge '+(d>0?'warn':'ok')+'">'+(d>0?('Долг '+fmt(d)+'₽'):('Оплачено '+fmt(c.paid||0)+'₽'))+'</span></div>';
-      el.addEventListener('click',function(){ openSheet(c); });
-      if(list) list.appendChild(el);
-    });
-  } else {
-    var allr=loadK(RKEY); var rows=allr.filter(function(it){
-      var t=(it.t||'').toLowerCase(), u=(it.u||'').toLowerCase();
-      return !q || t.indexOf(q)>-1 || u.indexOf(q)>-1;});
-    var list2=$('#res-list'); var empty2=$('#res-empty'); if(list2) list2.innerHTML='';
-    if(!rows.length){ if(empty2) empty2.style.display='block'; return } else if(empty2) empty2.style.display='none';
-    rows.forEach(function(it){
-      var href=it.u||''; var a=document.createElement('a'); a.className='link';
-      a.textContent=(it.t&&it.t.trim())?it.t:labelFrom(href); a.href=href;
-      if(/^https?:/i.test(href)){ a.target='_blank'; a.rel='noopener noreferrer'; }
-      else { a.addEventListener('click',function(ev){ev.preventDefault(); try{window.location.href=href}catch(e){}}); }
-      if(list2) list2.appendChild(a);
+  async function redeemAndApply(){ const l = LIC.get(); l.validUntil = Date.now() + 30*86400000; LIC.set(l); toast('Лицензия: +30 дней (демо)'); renderAll(); }
+
+  function showSub(which){ ['settings','builder','publish'].forEach(id=>{ byId('sub-'+id).style.display = (id===which?'block':'none'); }); $$('#subtabs .sub').forEach(b=>b.classList.toggle('active', b.dataset.sub===which)); }
+
+  function download(name, content, type='text/html'){ const blob = new Blob([content], {type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 500); }
+
+  function seed(){ if(DB.get().length) return; const now=Date.now(); DB.set([
+    {id:'#100123',name:'Иван Петров',phone:'+7 900 111-22-33',device:'iPhone 11',labor:3500,parts:4500,paid:2000,status:'work',createdAt:now-3*86400000},
+    {id:'#100124',name:'Мария Сидорова',phone:'+7 999 222-33-44',device:'Redmi Note 10',labor:2500,parts:1800,paid:4300,status:'done',createdAt:now-86400000},
+    {id:'#100125',name:'Андрей К.',phone:'+7 988 777-55-44',device:'Realme C61',labor:3000,parts:0,paid:0,status:'work',createdAt:now-8*86400000,dueAt:now-2*86400000}
+  ]); }
+
+  function hashHex(buf){ return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join(''); }
+  async function sha256(text){ const enc=new TextEncoder().encode(text); const buf=await crypto.subtle.digest('SHA-256',enc); return hashHex(buf); }
+
+  function renderAll(){ const list=DB.get(); const q=byId('q').value.trim(); const filtered=list.filter(x=>matchQuery(x,q)); const ag=aggregate(filtered);
+    byId('home-kpis').innerHTML=[
+      kpi('Всего заказов',ag.count),
+      kpi('В работе',ag.inWork),
+      kpi('Завершено',ag.done),
+      kpi('Долг суммарно',money(ag.totalDebt))
+    ].join('');
+    renderList('home-list',filtered);
+
+    // подборки
+    const debtors=list.filter(x=>compute(x).debt>0).sort((a,b)=>compute(b).overdueDays - compute(a).overdueDays);
+    const inwork=list.filter(x=>x.status==='work');
+    const done=list.filter(x=>x.status==='done');
+    byId('debts-summary').innerHTML=`<div class="kpis">${kpi('Должников',debtors.length)}${kpi('Сумма долга',money(aggregate(debtors).totalDebt))}</div>`;
+    renderList('debts-list',debtors);
+    renderList('work-list',inwork);
+    renderList('done-list',done);
+
+    // статус лицензии
+    const ls=licState(); const txt = ls.status==='ok'?`Лицензия до ${new Date(ls.until).toLocaleDateString('ru-RU')}` : (ls.status==='trial'? 'Демо-режим' : 'НЕТ ЛИЦЕНЗИИ');
+    byId('stat').textContent=txt;
+    byId('tenant-info').textContent='Экземпляр: '+TID;
+
+    // клики по карточкам -> редактор
+    $$('#home-list .card, #debts-list .card, #work-list .card, #done-list .card').forEach(el=>{
+      el.onclick = ()=> openEditor(el.getAttribute('data-id'));
     });
   }
-}
 
-function openSheet(c){ state.cur=c; var sh=$('#sheet'); if(sh) sh.classList.add('show'); fillForm(c); updPills(); }
-function closeSheet(){ var sh=$('#sheet'); if(sh) sh.classList.remove('show'); state.cur=null; }
-function fillForm(c){
-  var n=$('#f-name'), p=$('#f-phone'), d=$('#f-date'), pa=$('#f-parts'), la=$('#f-labor'), m=$('#f-markup'), paid=$('#f-paid'), note=$('#f-note');
-  if(n) n.value=c.name||''; if(p) p.value=c.phone||''; if(d) d.value=c.date||''; if(pa) pa.value=c.parts||0; if(la) la.value=c.labor||0; if(m) m.value=c.markup||0; if(paid) paid.value=c.paid||0; if(note) note.value=c.note||'';
-  var cl=$('#call'); if(cl){ cl.href='tel:'+normPhone(c.phone||''); }
-}
-function readForm(){
-  return {
-    id: state.cur.id,
-    name:($('#f-name')?$('#f-name').value.trim():''),
-    phone:($('#f-phone')?$('#f-phone').value.trim():''),
-    date:($('#f-date')?$('#f-date').value:''),
-    parts:+(($('#f-parts')&&$('#f-parts').value)||0)||0,
-    labor:+(($('#f-labor')&&$('#f-labor').value)||0)||0,
-    markup:+(($('#f-markup')&&$('#f-markup').value)||0)||0,
-    paid:+(($('#f-paid')&&$('#f-paid').value)||0)||0,
-    note:($('#f-note')?$('#f-note').value.trim():''),
-    updated: nowISO()
-  };
-}
-function updPills(){
-  if(!state.cur) return;
-  var c=readForm(); var total=(+c.parts||0)+(+c.labor||0)+(+c.markup||0); var debt=total-(+c.paid||0);
-  var pt=$('#pill-total'); if(pt) pt.textContent='Итог: '+fmt(total)+' ₽';
-  var p=$('#pill-debt'); if(p){ p.textContent='Долг: '+fmt(debt)+' ₽'; p.className='pill '+(debt>0?'bad':'ok'); }
-}
-function saveCur(){
-  if(!state.cur) return;
-  var all=loadK(CKEY); var idx=all.findIndex(function(x){return x.id===state.cur.id}); if(idx>-1){ all[idx]=readForm(); saveK(CKEY,all); }
-  closeSheet(); render();
-}
-function delCur(){
-  if(!state.cur) return;
-  var all=loadK(CKEY).filter(function(x){return x.id!==state.cur.id}); saveK(CKEY,all);
-  closeSheet(); render();
-}
-function debounce(fn,ms){var t;return function(){var a=arguments;clearTimeout(t);t=setTimeout(function(){fn.apply(null,a)},ms)}}
+  function openEditor(id){ const list=DB.get(); const it=list.find(x=>x.id===id) || {id:nowId(), name:'', phone:'', device:'', labor:0, parts:0, paid:0, status:'work', createdAt:Date.now()};
+    byId('ed-title').textContent = it.name? ('Редактировать '+it.name) : 'Новый клиент';
+    byId('ed-id').value=it.id; byId('ed-name').value=it.name||''; byId('ed-phone').value=it.phone||''; byId('ed-device').value=it.device||'';
+    byId('ed-due').value = it.dueAt? new Date(+it.dueAt).toISOString().slice(0,10) : '';
+    byId('ed-labor').value=it.labor||0; byId('ed-parts').value=it.parts||0; byId('ed-paid').value=it.paid||0; byId('ed-status').value=it.status||'work'; byId('ed-notes').value=it.notes||'';
+    byId('editor-layer').style.display='flex'; document.body.classList.add('modal-open');
+  }
 
-function switchView(v){
-  state.view=v;
-  var tc=$('#tab-clients'), tr=$('#tab-res'), vc=$('#view-clients'), vr=$('#view-res');
-  if(tc) tc.classList.toggle('active',v==='clients');
-  if(tr) tr.classList.toggle('active',v==='res');
-  if(vc) vc.style.display=(v==='clients')?'block':'none';
-  if(vr) vr.style.display=(v==='res')?'block':'none';
-  render();
-}
+  function closeEditor(){ byId('editor-layer').style.display='none'; document.body.classList.remove('modal-open'); }
 
-// SW & install tip
-if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('./service-worker.js').catch(function(e){console.log('SW error',e)}) }); }
-var tip=$('#install-tip'); window.addEventListener('beforeinstallprompt',function(e){e.preventDefault(); if(tip){ tip.style.display='block'; setTimeout(function(){tip.style.display='none'},6000) }});
+  function saveEditor(){ const list=DB.get(); const id=byId('ed-id').value || nowId();
+    const idx=list.findIndex(x=>x.id===id); const it={
+      id,
+      name:byId('ed-name').value.trim(),
+      phone:byId('ed-phone').value.trim(),
+      device:byId('ed-device').value.trim(),
+      dueAt: byId('ed-due').value? +new Date(byId('ed-due').value) : null,
+      labor:+byId('ed-labor').value||0,
+      parts:+byId('ed-parts').value||0,
+      paid:+byId('ed-paid').value||0,
+      status:byId('ed-status').value||'work',
+      notes:byId('ed-notes').value.trim(),
+      createdAt: Date.now()
+    };
+    if(idx>=0) list[idx]=it; else list.push(it);
+    DB.set(list); toast('Сохранено'); closeEditor(); renderAll();
+  }
 
-// Init
- document.addEventListener('DOMContentLoaded',function(){
-  // demo
-  var bd=$('#btn-demo'); if(bd) bd.addEventListener('click',function(){
-    // Clients demo
-    var demo=[
-      {id:'C-001',name:'Кадуков Андрей',phone:'+7 910 711-60-72',date:'2025-10-31',parts:3000,labor:2000,markup:500,paid:3500,note:'замена дисплея'},
-      {id:'C-002',name:'Сергей Орлов',phone:'+7 904 777-88-55',date:'2025-10-31',parts:1800,labor:1200,markup:300,paid:1800,note:'акб и чистка'},
-      {id:'C-003',name:'Мария Ким',phone:'+7 912 555-66-44',date:'2025-10-31',parts:0,labor:1500,markup:0,paid:1500,note:'диагностика'}
-    ];
-    saveK(CKEY,demo);
-    // Resources demo
-    saveK(RKEY,[
-      {t:'GitHub',u:'https://github.com/'},
-      {t:'Android Docs',u:'https://developer.android.com/'},
-      {t:'MIUI Forum',u:'https://c.mi.com/'},
-      {t:'УграРемКомп',u:'https://shobo.tb.ru/page2'}
-    ]);
-    render();
-  });
+  function markDone(){ const id=byId('ed-id').value; if(!id) return; const list=DB.get(); const it=list.find(x=>x.id===id); if(!it) return; it.status='done'; DB.set(list); toast('Отмечено завершённым'); closeEditor(); renderAll(); }
+  function removeItem(){ const id=byId('ed-id').value; if(!id) return; const list=DB.get().filter(x=>x.id!==id); DB.set(list); toast('Удалено'); closeEditor(); renderAll(); }
 
-  var q=$('#q'); if(q) q.addEventListener('input',debounce(render,DEBOUNCE_MS));
-  var ts=$('#to-storage'); if(ts) ts.addEventListener('click',function(){switchView('res')});
-  var tcli=$('#tab-clients'); if(tcli) tcli.addEventListener('click',function(){switchView('clients')});
-  var tres=$('#tab-res'); if(tres) tres.addEventListener('click',function(){switchView('res')});
-  var bc=$('[data-close]'); if(bc) bc.addEventListener('click',closeSheet);
-  var s=$('#save'); if(s) s.addEventListener('click',saveCur);
-  var d=$('#del'); if(d) d.addEventListener('click',delCur);
-  ['#f-name','#f-phone','#f-date','#f-parts','#f-labor','#f-markup','#f-paid','#f-note'].forEach(function(s){
-    var el=$(s); if(el) el.addEventListener('input',debounce(updPills,150));
-  });
-  // start on clients
-  switchView('clients');
- });
-})();</script>
+  function exportJSON(){ const data = DB.get(); const cfg = CFG.get(); const dump = {tid:TID, exportedAt: new Date().toISOString(), data, cfg}; download(`mcrm_${TID}.json`, JSON.stringify(dump,null,2), 'application/json'); }
+  function exportStatic(){ download('index.html', document.documentElement.outerHTML, 'text/html'); }
+
+  function navHandler(e){ const b=e.target.closest('[data-page]'); if(!b) return; const p=b.getAttribute('data-page'); $$('.tab').forEach(x=>x.classList.toggle('active',x.dataset.page===p)); $$('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===p)); $$('.page').forEach(x=>x.classList.toggle('active',x.id===`page-${p}`)); renderAll(); }
+
+  function init(){ ensureTrial(); seed(); byId('tenant-info').textContent='Экземпляр: '+TID;
+    byId('tabs').addEventListener('click',navHandler); byId('navbar').addEventListener('click',navHandler);
+    byId('q').addEventListener('input',renderAll);
+    byId('subtabs').addEventListener('click',function(e){ var b=e.target.closest('[data-sub]'); if(!b) return; showSub(b.dataset.sub); });
+    byId('cfg-save').addEventListener('click',async function(){ var cfg={name:byId('cfg-name').value,phone:byId('cfg-phone').value,licDays:+byId('cfg-licdays').value||30}; CFG.set(cfg); if(byId('cfg-pass').value){ var hash=await sha256(byId('cfg-pass').value); AUTH.setUsers([{id:'u1',name:'admin',role:'admin',pinHash:hash}]); }
+      var l=LIC.get(); l.validUntil=Date.now()+(cfg.licDays*86400000); LIC.set(l); toast('Настройки сохранены, лицензия продлена'); renderAll(); });
+    byId('cfg-reset').addEventListener('click',function(){ localStorage.removeItem(KEYS.data); toast('Демо-данные сброшены'); renderAll(); });
+
+    byId('add-new').addEventListener('click',()=>{ openEditor(null); });
+
+    // редактор
+    byId('ed-cancel').addEventListener('click',closeEditor);
+    byId('ed-save').addEventListener('click',function(e){ e.preventDefault(); saveEditor(); });
+    byId('ed-done').addEventListener('click',function(e){ e.preventDefault(); markDone(); });
+    byId('ed-delete').addEventListener('click',function(e){ e.preventDefault(); removeItem(); });
+
+    // экспорт
+    byId('exp-json') && byId('exp-json').addEventListener('click',exportJSON);
+    byId('exp-static') && byId('exp-static').addEventListener('click',exportStatic);
+
+    // гейт
+    byId('gate-enter').addEventListener('click',gateCheck);
+    byId('gate-trial').addEventListener('click',redeemAndApply);
+
+    // автооткрытие гейта при отсутствии доступа
+    const sess=AUTH.getSess(); if(!sess||!sess.ok){ gateShow('Введите пароль для входа в экземпляр'); }
+
+    renderAll();
+  }
+
+  if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); }); }
+  document.addEventListener('DOMContentLoaded',init);
+})();
+</script>
 </body>
 </html>
